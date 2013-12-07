@@ -3,14 +3,14 @@
 <product productid="funcaptcha" active="1">
 	<title>FunCaptcha</title>
 	<description>FunCaptcha stops spam with a fun, easy game.</description>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<url>https://www.funcaptcha.co</url>
 	<versioncheckurl />
 	<dependencies>
 		<dependency dependencytype="vbulletin" minversion="3.8" maxversion="" />
 	</dependencies>
 	<codes>
-		<code version="1.0.0">
+		<code version="1.1.0">
 			<installcode><![CDATA[
 				$db->query("
 					UPDATE " . TABLE_PREFIX . "setting set optioncode = 'radio:piped
@@ -171,7 +171,7 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 <option value=\"1\" " . iif($setting['value']=='1','selected="selected"') . ">Lightbox</option>
 <option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Inline</option>
 </select>]]></optioncode>
-				<defaultvalue>0</defaultvalue>
+				<defaultvalue>1</defaultvalue>
 			</setting>
 			<setting varname="funcaptcha_publickey" displayorder="2">
 				<datatype>free</datatype>
