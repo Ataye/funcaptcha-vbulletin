@@ -3,14 +3,14 @@
 <product productid="funcaptcha" active="1">
 	<title>FunCaptcha</title>
 	<description>FunCaptcha stops spam with a fun, easy game.</description>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<url>https://www.funcaptcha.co</url>
 	<versioncheckurl />
 	<dependencies>
 		<dependency dependencytype="vbulletin" minversion="3.8" maxversion="" />
 	</dependencies>
 	<codes>
-		<code version="1.1.0">
+		<code version="1.2.0">
 			<installcode><![CDATA[
 				$db->query("
 					UPDATE " . TABLE_PREFIX . "setting set optioncode = 'radio:piped
@@ -71,7 +71,7 @@ Recaptcha|recaptcha' where varname='hv_type'
 			<title>Add FunCaptcha to human verification manager options</title>
 			<hookname>admin_humanverify_intro_start</hookname>
 			<phpcode><![CDATA[
-			$funcaptcha_vars = array("funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox");
+			$funcaptcha_vars = array("funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox", "funcaptcha_proxy");
 			foreach ($funcaptcha_vars AS $funcaptcha_var) {
 				array_push($getsettings, $funcaptcha_var);
 				array_push($varnames, "setting_" . $funcaptcha_var . "_title");
@@ -153,6 +153,10 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 			]]></phrase>
 			<phrase name="settinggroup_funcaptcha" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Settings
 			]]></phrase>
+			<phrase name="setting_funcaptcha_proxy_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[This field is optional - Proxy server (including port, eg: 111.11.11.111:8080):
+			]]></phrase>
+			<phrase name="setting_funcaptcha_proxy_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Optional - Proxy Server
+			]]></phrase>
 		</phrasetype>
 	</phrases>
 	<options>
@@ -178,6 +182,9 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 			</setting>
 			<setting varname="funcaptcha_privatekey" displayorder="3">
 				<datatype>free</datatype>
+			</setting>
+			<setting varname="funcaptcha_proxy" displayorder="4">
+				<datatype></datatype>
 			</setting>
 		</settinggroup>
 	</options>

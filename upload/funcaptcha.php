@@ -39,6 +39,10 @@ if ( ! class_exists('FUNCAPTCHA')):
 	protected $funcaptcha_lightbox_submit_javascript = "";
 	protected $session_token;
 
+	protected $funcaptcha_proxy;
+
+	protected $funcaptcha_json_path = "json.php";
+
 	protected $version = '0.0.7';
 
 	/**
@@ -48,6 +52,10 @@ if ( ! class_exists('FUNCAPTCHA')):
 	public function __construct()
 	{		
 		$this->funcaptcha_host = FUNCAPTCHA_SERVER;
+
+		if ($this->funcaptcha_api_type == "vBulletin") {
+			$this->funcaptcha_json_path = DIR . "/includes/json.php";
+		}
 		
 		if ($this->funcaptcha_host == "")
 		{
@@ -97,6 +105,7 @@ if ( ! class_exists('FUNCAPTCHA')):
 
 		//get session token.
 		$session = $this->doPostReturnObject('/fc/gt/', $data);
+
 		$this->session_token = $session->token;
 		$this->funcaptcha_challenge_url = $session->challenge_url;
 
@@ -173,6 +182,12 @@ if ( ! class_exists('FUNCAPTCHA')):
 		$this->msgLog("DEBUG", "Lightbox JS Name: '$this->funcaptcha_lightbox_submit_javascript'");
 	}
 
+	// Proxy support.
+	public function setProxy($proxy) {
+		$this->funcaptcha_proxy = $proxy;
+		$this->msgLog("DEBUG", "Proxy: '$this->funcaptcha_proxy'");
+	}
+
 	/**
 	 * Verify if user has solved the FunCaptcha
 	 *
@@ -243,42 +258,79 @@ if ( ! class_exists('FUNCAPTCHA')):
 		// Log it.
 		$this->msgLog("DEBUG", "cURl: url='$curl_url', data='$data_string'");
 
-		// Initialize cURL session.
-		if ($ch = curl_init($curl_url))
-		{
-			// Set the cURL options.
-			curl_setopt($ch, CURLOPT_POST, count($data));
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		if (function_exists('curl_init') and function_exists('curl_exec')) {
+			if ($ch = curl_init($curl_url))
+			{
+				// Set the cURL options.
+				curl_setopt($ch, CURLOPT_POST, count($data));
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+				if (isset($this->funcaptcha_proxy)) {
+					curl_setopt($ch,CURLOPT_PROXY, $this->funcaptcha_proxy);
+				}
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-			// Execute the cURL request.
-			$result = curl_exec($ch);			
-			curl_close($ch);
-			$result = json_decode($result);
-		}
-		else
-		{
+				// Execute the cURL request.
+				$result = curl_exec($ch);			
+				curl_close($ch);
+			}
+			else
+			{
+				// Log it.
+				$this->msgLog("DEBUG", "Unable to enable cURL: url='$curl_url'");
+			}
+		} else {
 			// Log it.
-			$this->msgLog("DEBUG", "Unable to enable cURL: url='$curl_url'");
-		}
+			// Build a header
+			$http_request  = "POST $url_path HTTP/1.1\r\n";
+			$http_request .= "Host: $this->funcaptcha_host\r\n";
+			$http_request .= "Content-Type: application/x-www-form-urlencoded;\r\n";
+			$http_request .= "Content-Length: " . strlen($data_string) . "\r\n";
+			$http_request .= "User-Agent: FunCaptcha/PHP " . $this->funcaptcha_plugin_version . "\r\n";
+			$http_request .= "Connection: Close\r\n";
+			$http_request .= "\r\n";
+			$http_request .= $data_string ."\r\n";
 
+			$result = '';
+			$errno = $errstr = "";
+			$fs = fsockopen("ssl://" . $this->funcaptcha_host, 443, $errno, $errstr, 10);
+
+			if( false == $fs ) {
+				$this->__log("ERROR", __FUNCTION__, "Could not open socket");
+			} else {
+				fwrite($fs, $http_request);
+				while (!feof($fs)) {
+					$result .= fgets($fs, 4096);
+				}
+				$result = explode("\r\n\r\n", $result, 2);
+				$result = $result[1];
+			}
+		}
+		$result = $this->JSONDecode($result);
 		return $result;
 	}
 
-	/**
-	 * Determine whether or not cURL is available to use.
-	 *
-	 * @return boolean
-	 */
-	protected function can_use_curl()
-	{
-		if (function_exists('curl_init') and function_exists('curl_exec'))
-		{
-			return TRUE;
+	// Internal function: does a JSON decode of the string
+	protected function JSONDecode($string) {
+		$result = array();
+		if (function_exists("json_decode")) {
+			try {
+				$result = json_decode( $string);
+			} catch (Exception $e) {
+				$this->msgLog("ERROR", "Exception when calling json_decode: " . $e->getMessage());
+				$result = null;
+			}
+		} else if (file_Exists($this->funcaptcha_json_path)) {
+			require_once($this->funcaptcha_json_path);
+			$json = new Services_JSON();
+			$result = $json->decode($string);
+			var_dump($result);
+		} else {
+			$this->msgLog("ERROR", "No JSON decode function available.");
 		}
-		return FALSE;
+
+		return $result;
 	}
 
 	/**
