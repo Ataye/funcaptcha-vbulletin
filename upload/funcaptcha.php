@@ -325,7 +325,6 @@ if ( ! class_exists('FUNCAPTCHA')):
 			require_once($this->funcaptcha_json_path);
 			$json = new Services_JSON();
 			$result = $json->decode($string);
-			var_dump($result);
 		} else {
 			$this->msgLog("ERROR", "No JSON decode function available.");
 		}
