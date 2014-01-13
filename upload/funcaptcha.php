@@ -297,7 +297,7 @@ if ( ! class_exists('FUNCAPTCHA')):
 			$fs = fsockopen("ssl://" . $this->funcaptcha_host, 443, $errno, $errstr, 10);
 
 			if( false == $fs ) {
-				$this->__log("ERROR", __FUNCTION__, "Could not open socket");
+				$this->msgLog("ERROR", "Could not open socket");
 			} else {
 				fwrite($fs, $http_request);
 				while (!feof($fs)) {
@@ -308,6 +308,7 @@ if ( ! class_exists('FUNCAPTCHA')):
 			}
 		}
 		$result = $this->JSONDecode($result);
+
 		return $result;
 	}
 
@@ -328,7 +329,6 @@ if ( ! class_exists('FUNCAPTCHA')):
 		} else {
 			$this->msgLog("ERROR", "No JSON decode function available.");
 		}
-
 		return $result;
 	}
 

@@ -42,13 +42,13 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 	function verify_token($input)
 	{
 		$funcaptcha =  new FUNCAPTCHA();
+		$funcaptcha->setProxy(FUNCAPTCHA_PROXY);
 		$score =  $funcaptcha->checkResult(FUNCAPTCHA_PRIVATE_KEY);
 		
 		if ($score) {
 			return true;
         } else {
         	$this->error = 'funcaptcha_unverfied';
-        	
 			return false;
         }
 	}
