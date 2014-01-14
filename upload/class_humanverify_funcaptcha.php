@@ -71,7 +71,7 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 		if (FUNCAPTCHA_LIGHTBOX) {
 			$output = $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY);
 		} else {
-			$output = "<div class=\"blockrow\"><div class=\"group\"><li>";
+			$output = "<div class=\"blockrow\"><input type=hidden value='1' id='humanverify' name='humanverify' /><div class=\"group\"><li>";
 			$output = $output . "<label>Verification:</label>";
 			$output = $output . $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY);
 			$output = $output . "</li></div></div>";
