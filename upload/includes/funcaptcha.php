@@ -30,7 +30,7 @@ if ( ! class_exists('FUNCAPTCHA')):
 	protected $funcaptcha_host = 'funcaptcha.co';
 	protected $funcaptcha_challenge_url = '';
 	protected $funcaptcha_debug = FALSE;
-	protected $funcaptcha_api_type = "php";
+	protected $funcaptcha_api_type = "vBulletin";
 	protected $funcaptcha_plugin_version = "1.0.0";
 	protected $funcaptcha_security_level = 0;
 	protected $funcaptcha_lightbox_mode = FALSE;
