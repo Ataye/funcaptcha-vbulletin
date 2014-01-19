@@ -3,7 +3,7 @@
  * FunCaptcha
  * PHP Integration Library
  *
- * @version 0.0.7
+ * @version 1.0.0
  *
  * Copyright (c) 2013 SwipeAds -- http://www.funcaptcha.co
  * AUTHOR:
@@ -30,20 +30,17 @@ if ( ! class_exists('FUNCAPTCHA')):
 	protected $funcaptcha_host = 'funcaptcha.co';
 	protected $funcaptcha_challenge_url = '';
 	protected $funcaptcha_debug = FALSE;
-	protected $funcaptcha_api_type = "vBulletin";
-	protected $funcaptcha_plugin_version = "0.0.7";
+	protected $funcaptcha_api_type = "php";
+	protected $funcaptcha_plugin_version = "1.0.0";
 	protected $funcaptcha_security_level = 0;
-
 	protected $funcaptcha_lightbox_mode = FALSE;
 	protected $funcaptcha_lightbox_button_id = "";
 	protected $funcaptcha_lightbox_submit_javascript = "";
 	protected $session_token;
-
+	protected $funcaptcha_theme = 0;
 	protected $funcaptcha_proxy;
-
 	protected $funcaptcha_json_path = "json.php";
-
-	protected $version = '0.0.7';
+	protected $version = '1.0.0';
 
 	/**
 	 * Constructor
@@ -100,12 +97,12 @@ if ( ! class_exists('FUNCAPTCHA')):
 			'lightbox'				=> $this->funcaptcha_lightbox_mode,
 			'lightbox_button_id'	=> $this->funcaptcha_lightbox_button_id,
 			'lightbox_submit_js'	=> $this->funcaptcha_lightbox_submit_javascript,
+			'theme'					=> $this->funcaptcha_theme,
 			'args'					=> $args
 		);
 
 		//get session token.
 		$session = $this->doPostReturnObject('/fc/gt/', $data);
-
 		$this->session_token = $session->token;
 		$this->funcaptcha_challenge_url = $session->challenge_url;
 
@@ -159,7 +156,31 @@ if ( ! class_exists('FUNCAPTCHA')):
 	 */
 	public function setSecurityLevel($security) {
 		$this->funcaptcha_security_level = $security;
-		$this->msgLog("DEBUG", "Security Level: '$this->funcaptcha_public_key'");
+		$this->msgLog("DEBUG", "Security Level: '$this->funcaptcha_security_level'");
+	}
+
+	/**
+	 * Set theme of FunCaptcha
+	 *
+	 * See here for options: https://www.funcaptcha.co/themes/
+	 *
+	 * @param int $theme - theme option, 0 is default.
+	 * @return boolean
+	 */
+	public function setTheme($theme) {
+		$this->funcaptcha_theme = $theme;
+		$this->msgLog("DEBUG", "Theme: '$this->funcaptcha_theme'");
+	}
+
+	/**
+	 * Set proxy for FunCaptcha
+	 *
+	 * @param int $proxy - Proxy server (including port, eg: 111.11.11.111:8080)
+	 * @return boolean
+	 */
+	public function setProxy($proxy) {
+		$this->funcaptcha_proxy = $proxy;
+		$this->msgLog("DEBUG", "Proxy: '$this->funcaptcha_proxy'");
 	}
 
 	/**
@@ -180,12 +201,6 @@ if ( ! class_exists('FUNCAPTCHA')):
 		$this->msgLog("DEBUG", "Lightbox mode: '$this->funcaptcha_lightbox_mode'");
 		$this->msgLog("DEBUG", "Lightbox Button ID: '$this->funcaptcha_lightbox_button_id'");
 		$this->msgLog("DEBUG", "Lightbox JS Name: '$this->funcaptcha_lightbox_submit_javascript'");
-	}
-
-	// Proxy support.
-	public function setProxy($proxy) {
-		$this->funcaptcha_proxy = $proxy;
-		$this->msgLog("DEBUG", "Proxy: '$this->funcaptcha_proxy'");
 	}
 
 	/**
@@ -312,7 +327,12 @@ if ( ! class_exists('FUNCAPTCHA')):
 		return $result;
 	}
 
-	// Internal function: does a JSON decode of the string
+	/**
+	 * Internal function - does does JSON decoding of data from server.
+	 *
+	 * @param string $string - json to decode
+	 * @return object
+	 */
 	protected function JSONDecode($string) {
 		$result = array();
 		if (function_exists("json_decode")) {

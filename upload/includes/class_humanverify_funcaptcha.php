@@ -11,6 +11,7 @@ define( 'FUNCAPTCHA_PUBLIC_KEY', $vbulletin->options["funcaptcha_publickey"]);
 define( 'FUNCAPTCHA_PRIVATE_KEY', $vbulletin->options["funcaptcha_privatekey"]);
 define( 'FUNCAPTCHA_SECURITY_LEVEL', $vbulletin->options["funcaptcha_security"]);
 define( 'FUNCAPTCHA_LIGHTBOX', $vbulletin->options["funcaptcha_lightbox"]);
+define( 'FUNCAPTCHA_THEME', $vbulletin->options["funcaptcha_theme"]);
 define( 'FUNCAPTCHA_PROXY', $vbulletin->options["funcaptcha_proxy"]);
 
 
@@ -43,6 +44,7 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 	{
 		$funcaptcha =  new FUNCAPTCHA();
 		$funcaptcha->setProxy(FUNCAPTCHA_PROXY);
+		$funcaptcha->setTheme(FUNCAPTCHA_THEME);
 		$score =  $funcaptcha->checkResult(FUNCAPTCHA_PRIVATE_KEY);
 		
 		if ($score) {
@@ -67,6 +69,8 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 		$funcaptcha->setSecurityLevel(FUNCAPTCHA_SECURITY_LEVEL);
 		$funcaptcha->setLightboxMode(FUNCAPTCHA_LIGHTBOX);
 		$funcaptcha->setProxy(FUNCAPTCHA_PROXY);
+		$funcaptcha->setTheme(FUNCAPTCHA_THEME);
+		
 		//only show HTML/label if not lightbox mode.
 		if (FUNCAPTCHA_LIGHTBOX) {
 			$output = $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY);

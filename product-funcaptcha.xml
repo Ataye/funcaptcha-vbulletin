@@ -5,7 +5,7 @@
 	<description>FunCaptcha stops spam with a fun, easy game.</description>
 	<version>1.2.0</version>
 	<url>https://www.funcaptcha.co</url>
-	<versioncheckurl />
+	<versioncheckurl>http://funcaptcha.co/fc/plugins/vbulletin/versioncheck/</versioncheckurl>
 	<dependencies>
 		<dependency dependencytype="vbulletin" minversion="3.8" maxversion="" />
 	</dependencies>
