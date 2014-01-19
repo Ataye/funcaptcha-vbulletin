@@ -71,7 +71,7 @@ Recaptcha|recaptcha' where varname='hv_type'
 			<title>Add FunCaptcha to human verification manager options</title>
 			<hookname>admin_humanverify_intro_start</hookname>
 			<phpcode><![CDATA[
-			$funcaptcha_vars = array("funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox", "funcaptcha_proxy");
+			$funcaptcha_vars = array("funcaptcha_theme", "funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox", "funcaptcha_proxy");
 			foreach ($funcaptcha_vars AS $funcaptcha_var) {
 				array_push($getsettings, $funcaptcha_var);
 				array_push($varnames, "setting_" . $funcaptcha_var . "_title");
@@ -137,6 +137,10 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 		<phrasetype name="vBulletin Settings" fieldname="vbsettings">
 			<phrase name="setting_funcaptcha_security_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[If you choose Automatic, security starts at the lowest level, and rises and falls automatically, adjusted by FunCaptcha's monitoring system. The Enhanced level has more challenges to solve, but is very hard for spammer programs to get past:
 			]]></phrase>
+			<phrase name="setting_funcaptcha_theme_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Theme
+			]]></phrase>
+			<phrase name="setting_funcaptcha_theme_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[This will change the appearance of FunCaptcha:
+			]]></phrase>
 			<phrase name="setting_funcaptcha_security_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Security Level
 			]]></phrase>
 			<phrase name="setting_funcaptcha_lightbox_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Lightbox mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form:
@@ -161,7 +165,17 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 	</phrases>
 	<options>
 		<settinggroup name="funcaptcha" displayorder="0">
-			<setting varname="funcaptcha_security" displayorder="1">
+			<setting varname="funcaptcha_theme" displayorder="1">
+				<datatype>free</datatype>
+				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" id=\"select_setting[funcaptcha_theme]\" class=\"bginput\">
+<option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Standard</option>
+<option value=\"2\" " . iif($setting['value']=='2','selected="selected"') . ">vBulletin Blue</option>
+<option value=\"2\" " . iif($setting['value']=='3','selected="selected"') . ">White</option>
+<option value=\"2\" " . iif($setting['value']=='4','selected="selected"') . ">Black</option>
+</select>]]></optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="funcaptcha_security" displayorder="2">
 				<datatype>free</datatype>
 				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" id=\"select_setting[funcaptcha_security]\" class=\"bginput\">
 <option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Automatic</option>
@@ -169,7 +183,7 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 </select>]]></optioncode>
 				<defaultvalue>0</defaultvalue>
 			</setting>
-			<setting varname="funcaptcha_lightbox" displayorder="1">
+			<setting varname="funcaptcha_lightbox" displayorder="3">
 				<datatype>free</datatype>
 				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" id=\"select_setting[funcaptcha_lightbox]\" class=\"bginput\">
 <option value=\"1\" " . iif($setting['value']=='1','selected="selected"') . ">Lightbox</option>
@@ -177,13 +191,13 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 </select>]]></optioncode>
 				<defaultvalue>1</defaultvalue>
 			</setting>
-			<setting varname="funcaptcha_publickey" displayorder="2">
+			<setting varname="funcaptcha_publickey" displayorder="4">
 				<datatype>free</datatype>
 			</setting>
-			<setting varname="funcaptcha_privatekey" displayorder="3">
+			<setting varname="funcaptcha_privatekey" displayorder="5">
 				<datatype>free</datatype>
 			</setting>
-			<setting varname="funcaptcha_proxy" displayorder="4">
+			<setting varname="funcaptcha_proxy" displayorder="6">
 				<datatype></datatype>
 			</setting>
 		</settinggroup>
