@@ -13,7 +13,7 @@ define( 'FUNCAPTCHA_SECURITY_LEVEL', $vbulletin->options["funcaptcha_security"])
 define( 'FUNCAPTCHA_LIGHTBOX', $vbulletin->options["funcaptcha_lightbox"]);
 define( 'FUNCAPTCHA_THEME', $vbulletin->options["funcaptcha_theme"]);
 define( 'FUNCAPTCHA_PROXY', $vbulletin->options["funcaptcha_proxy"]);
-
+define( 'FUNCAPTCHA_JSFALLBACK', $vbulletin->options["funcaptcha_jsfallback"]);
 
 require_once(DIR . '/includes/funcaptcha.php');
 
@@ -45,6 +45,7 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 		$funcaptcha =  new FUNCAPTCHA();
 		$funcaptcha->setProxy(FUNCAPTCHA_PROXY);
 		$funcaptcha->setTheme(FUNCAPTCHA_THEME);
+		$funcaptcha->setNoJSFallback(FUNCAPTCHA_JSFALLBACK);
 		$score =  $funcaptcha->checkResult(FUNCAPTCHA_PRIVATE_KEY);
 		
 		if ($score) {
@@ -70,6 +71,7 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 		$funcaptcha->setLightboxMode(FUNCAPTCHA_LIGHTBOX);
 		$funcaptcha->setProxy(FUNCAPTCHA_PROXY);
 		$funcaptcha->setTheme(FUNCAPTCHA_THEME);
+		$funcaptcha->setNoJSFallback(FUNCAPTCHA_JSFALLBACK);
 		
 		//only show HTML/label if not lightbox mode.
 		if (FUNCAPTCHA_LIGHTBOX) {

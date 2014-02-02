@@ -157,6 +157,10 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 			]]></phrase>
 			<phrase name="settinggroup_funcaptcha" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Settings
 			]]></phrase>
+			<phrase name="setting_funcaptcha_jsfallback_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[If the user does not have Javascript enabled, display a fallback CAPTCHA? (Most bots have Javascript disabled, we recommend you leave this off):
+			]]></phrase>
+			<phrase name="setting_funcaptcha_jsfallback_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Javascript Fallback
+			]]></phrase>
 			<phrase name="setting_funcaptcha_proxy_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[This field is optional - Proxy server (including port, eg: 111.11.11.111:8080):
 			]]></phrase>
 			<phrase name="setting_funcaptcha_proxy_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Optional - Proxy Server
@@ -197,7 +201,14 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 			<setting varname="funcaptcha_privatekey" displayorder="5">
 				<datatype>free</datatype>
 			</setting>
-			<setting varname="funcaptcha_proxy" displayorder="6">
+			<setting varname="funcaptcha_jsfallback" displayorder="6">
+				<datatype>free</datatype>
+				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" id=\"select_setting[funcaptcha_jsfallback]\" class=\"bginput\">
+<option value=\"1\" " . iif($setting['value']=='1','selected="selected"') . ">Disable</option>
+<option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Enable</option>
+</select>]]></optioncode>
+
+			<setting varname="funcaptcha_proxy" displayorder="7">
 				<datatype></datatype>
 			</setting>
 		</settinggroup>
