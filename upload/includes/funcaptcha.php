@@ -132,7 +132,7 @@ if ( ! class_exists('FUNCAPTCHA')):
 			$url.= $this->funcaptcha_host;
 			$url.= $this->funcaptcha_challenge_url;
 			$url.= "?cache=" . time();
-			return "<div id='FunCaptcha'></div><input type='hidden' id='FunCaptcha-Token' name='fc-token' value='" . $this->session_token . "'><script src='". $url ."' type='text/javascript' language='JavaScript'></script>". ($this->funcaptcha_nojs_fallback ? $session->noscript : "");
+			return "<div id='FunCaptcha'></div><input type='hidden' id='FunCaptcha-Token' name='fc-token' value='" . $this->session_token . "'><script src='". $url ."' type='text/javascript' language='JavaScript'></script>". ($this->funcaptcha_nojs_fallback ? $session->noscript : "<p>Please enable Javascript to continue.</p>");
 		}
 		else
 		{

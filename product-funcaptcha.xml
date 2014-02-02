@@ -71,7 +71,7 @@ Recaptcha|recaptcha' where varname='hv_type'
 			<title>Add FunCaptcha to human verification manager options</title>
 			<hookname>admin_humanverify_intro_start</hookname>
 			<phpcode><![CDATA[
-			$funcaptcha_vars = array("funcaptcha_theme", "funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox", "funcaptcha_proxy");
+			$funcaptcha_vars = array("funcaptcha_theme", "funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox", "funcaptcha_proxy", "funcaptcha_jsfallback");
 			foreach ($funcaptcha_vars AS $funcaptcha_var) {
 				array_push($getsettings, $funcaptcha_var);
 				array_push($varnames, "setting_" . $funcaptcha_var . "_title");
@@ -157,7 +157,7 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 			]]></phrase>
 			<phrase name="settinggroup_funcaptcha" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Settings
 			]]></phrase>
-			<phrase name="setting_funcaptcha_jsfallback_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[If the user does not have Javascript enabled, display a fallback CAPTCHA? (Most bots have Javascript disabled, we recommend you leave this off):
+			<phrase name="setting_funcaptcha_jsfallback_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[If the user does not have Javascript enabled, display a fallback CAPTCHA? (Most bots have Javascript disabled, we recommend you leave this disabled):
 			]]></phrase>
 			<phrase name="setting_funcaptcha_jsfallback_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Javascript Fallback
 			]]></phrase>
@@ -195,19 +195,20 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 </select>]]></optioncode>
 				<defaultvalue>1</defaultvalue>
 			</setting>
-			<setting varname="funcaptcha_publickey" displayorder="4">
-				<datatype>free</datatype>
-			</setting>
-			<setting varname="funcaptcha_privatekey" displayorder="5">
-				<datatype>free</datatype>
-			</setting>
-			<setting varname="funcaptcha_jsfallback" displayorder="6">
+						<setting varname="funcaptcha_jsfallback" displayorder="4">
 				<datatype>free</datatype>
 				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" id=\"select_setting[funcaptcha_jsfallback]\" class=\"bginput\">
-<option value=\"1\" " . iif($setting['value']=='1','selected="selected"') . ">Disable</option>
-<option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Enable</option>
+<option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Disable</option>
+<option value=\"1\" " . iif($setting['value']=='1','selected="selected"') . ">Enable</option>
 </select>]]></optioncode>
-
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="funcaptcha_publickey" displayorder="5">
+				<datatype>free</datatype>
+			</setting>
+			<setting varname="funcaptcha_privatekey" displayorder="6">
+				<datatype>free</datatype>
+			</setting>
 			<setting varname="funcaptcha_proxy" displayorder="7">
 				<datatype></datatype>
 			</setting>
