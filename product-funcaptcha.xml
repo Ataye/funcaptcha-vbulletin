@@ -3,14 +3,14 @@
 <product productid="funcaptcha" active="1">
 	<title>FunCaptcha</title>
 	<description>FunCaptcha stops spam with a fun, easy game.</description>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<url>https://www.funcaptcha.co/vb/</url>
 	<versioncheckurl>http://funcaptcha.co/fc/plugins/vbulletin/versioncheck/</versioncheckurl>
 	<dependencies>
 		<dependency dependencytype="vbulletin" minversion="3.8" maxversion="" />
 	</dependencies>
 	<codes>
-		<code version="1.2.0">
+		<code version="1.2.1">
 			<installcode><![CDATA[
 				$db->query("
 					UPDATE " . TABLE_PREFIX . "setting set optioncode = 'radio:piped
