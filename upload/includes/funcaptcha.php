@@ -95,6 +95,7 @@ if ( ! class_exists('FUNCAPTCHA')):
 			'api_type'				=> $this->funcaptcha_api_type,
 			'plugin_version'		=> $this->funcaptcha_plugin_version,
 			'security_level'		=> $this->funcaptcha_security_level,
+			'noscript_support'		=> $this->funcaptcha_nojs_fallback,
 			'lightbox'				=> $this->funcaptcha_lightbox_mode,
 			'lightbox_button_id'	=> $this->funcaptcha_lightbox_button_id,
 			'lightbox_submit_js'	=> $this->funcaptcha_lightbox_submit_javascript,
