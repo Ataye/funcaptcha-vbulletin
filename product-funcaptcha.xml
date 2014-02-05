@@ -143,7 +143,7 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 			]]></phrase>
 			<phrase name="setting_funcaptcha_security_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Security Level
 			]]></phrase>
-			<phrase name="setting_funcaptcha_lightbox_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Lightbox mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form:
+			<phrase name="setting_funcaptcha_lightbox_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Lightbox mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form. We recommend Lightbox for the best user experience:
 			]]></phrase>
 			<phrase name="setting_funcaptcha_lightbox_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Lightbox Mode
 			]]></phrase>
