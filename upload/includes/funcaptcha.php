@@ -3,7 +3,7 @@
  * FunCaptcha
  * PHP Integration Library
  *
- * @version 1.0.0
+ * @version 1.0.1
  *
  * Copyright (c) 2013 SwipeAds -- http://www.funcaptcha.co
  * AUTHOR:
@@ -31,7 +31,7 @@ if ( ! class_exists('FUNCAPTCHA')):
 	protected $funcaptcha_challenge_url = '';
 	protected $funcaptcha_debug = FALSE;
 	protected $funcaptcha_api_type = "vBulletin";
-	protected $funcaptcha_plugin_version = "1.0.0";
+	protected $funcaptcha_plugin_version = "1.2.1";
 	protected $funcaptcha_security_level = 0;
 	protected $funcaptcha_lightbox_mode = FALSE;
 	protected $funcaptcha_lightbox_button_id = "";
@@ -40,7 +40,8 @@ if ( ! class_exists('FUNCAPTCHA')):
 	protected $funcaptcha_theme = 0;
 	protected $funcaptcha_proxy;
 	protected $funcaptcha_json_path = "json.php";
-	protected $version = '1.0.0';
+	protected $funcaptcha_nojs_fallback = false;
+	protected $version = '1.0.1';
 
 	/**
 	 * Constructor
@@ -94,6 +95,7 @@ if ( ! class_exists('FUNCAPTCHA')):
 			'api_type'				=> $this->funcaptcha_api_type,
 			'plugin_version'		=> $this->funcaptcha_plugin_version,
 			'security_level'		=> $this->funcaptcha_security_level,
+			'noscript_support'		=> $this->funcaptcha_nojs_fallback,
 			'lightbox'				=> $this->funcaptcha_lightbox_mode,
 			'lightbox_button_id'	=> $this->funcaptcha_lightbox_button_id,
 			'lightbox_submit_js'	=> $this->funcaptcha_lightbox_submit_javascript,
@@ -131,7 +133,7 @@ if ( ! class_exists('FUNCAPTCHA')):
 			$url.= $this->funcaptcha_host;
 			$url.= $this->funcaptcha_challenge_url;
 			$url.= "?cache=" . time();
-			return "<div id='FunCaptcha'></div><input type='hidden' id='FunCaptcha-Token' name='fc-token' value='" . $this->session_token . "'><script src='". $url ."' type='text/javascript' language='JavaScript'></script>".$session->noscript;
+			return "<div id='FunCaptcha'></div><input type='hidden' id='FunCaptcha-Token' name='fc-token' value='" . $this->session_token . "'><script src='". $url ."' type='text/javascript' language='JavaScript'></script>". ($this->funcaptcha_nojs_fallback ? $session->noscript : "<noscript><p>Please enable JavaScript to continue.</p></noscript>");
 		}
 		else
 		{
@@ -181,6 +183,17 @@ if ( ! class_exists('FUNCAPTCHA')):
 	public function setProxy($proxy) {
 		$this->funcaptcha_proxy = $proxy;
 		$this->msgLog("DEBUG", "Proxy: '$this->funcaptcha_proxy'");
+	}
+
+	/**
+	 * Set if the user has no Javascript if it should fallback to a non-FunCaptcha CAPTCHA instead.
+	 *
+	 * @param int $toggle - Boolean, if on or not.
+	 * @return boolean
+	 */
+	public function setNoJSFallback($toggle) {
+		$this->funcaptcha_nojs_fallback = $toggle;
+		$this->msgLog("DEBUG", "No JS Fallback: '$this->funcaptcha_nojs_fallback'");
 	}
 
 	/**

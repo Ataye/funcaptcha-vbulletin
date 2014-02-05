@@ -3,14 +3,14 @@
 <product productid="funcaptcha" active="1">
 	<title>FunCaptcha</title>
 	<description>FunCaptcha stops spam with a fun, easy game.</description>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<url>https://www.funcaptcha.co/vb/</url>
 	<versioncheckurl>http://funcaptcha.co/fc/plugins/vbulletin/versioncheck/</versioncheckurl>
 	<dependencies>
 		<dependency dependencytype="vbulletin" minversion="3.8" maxversion="" />
 	</dependencies>
 	<codes>
-		<code version="1.2.0">
+		<code version="1.2.1">
 			<installcode><![CDATA[
 				$db->query("
 					UPDATE " . TABLE_PREFIX . "setting set optioncode = 'radio:piped
@@ -71,7 +71,7 @@ Recaptcha|recaptcha' where varname='hv_type'
 			<title>Add FunCaptcha to human verification manager options</title>
 			<hookname>admin_humanverify_intro_start</hookname>
 			<phpcode><![CDATA[
-			$funcaptcha_vars = array("funcaptcha_theme", "funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox", "funcaptcha_proxy");
+			$funcaptcha_vars = array("funcaptcha_theme", "funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox", "funcaptcha_proxy", "funcaptcha_jsfallback");
 			foreach ($funcaptcha_vars AS $funcaptcha_var) {
 				array_push($getsettings, $funcaptcha_var);
 				array_push($varnames, "setting_" . $funcaptcha_var . "_title");
@@ -143,7 +143,7 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 			]]></phrase>
 			<phrase name="setting_funcaptcha_security_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Security Level
 			]]></phrase>
-			<phrase name="setting_funcaptcha_lightbox_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Lightbox mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form:
+			<phrase name="setting_funcaptcha_lightbox_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Lightbox mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form. We recommend Lightbox for the best user experience:
 			]]></phrase>
 			<phrase name="setting_funcaptcha_lightbox_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Lightbox Mode
 			]]></phrase>
@@ -156,6 +156,10 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 			<phrase name="setting_funcaptcha_privatekey_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Private Key
 			]]></phrase>
 			<phrase name="settinggroup_funcaptcha" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Settings
+			]]></phrase>
+			<phrase name="setting_funcaptcha_jsfallback_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[If the user does not have Javascript enabled, display a fallback CAPTCHA? (Most bots have Javascript disabled, we recommend you leave this disabled):
+			]]></phrase>
+			<phrase name="setting_funcaptcha_jsfallback_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Javascript Fallback
 			]]></phrase>
 			<phrase name="setting_funcaptcha_proxy_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[This field is optional - Proxy server (including port, eg: 111.11.11.111:8080):
 			]]></phrase>
@@ -191,13 +195,21 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 </select>]]></optioncode>
 				<defaultvalue>1</defaultvalue>
 			</setting>
-			<setting varname="funcaptcha_publickey" displayorder="4">
+						<setting varname="funcaptcha_jsfallback" displayorder="4">
+				<datatype>free</datatype>
+				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" id=\"select_setting[funcaptcha_jsfallback]\" class=\"bginput\">
+<option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Disable</option>
+<option value=\"1\" " . iif($setting['value']=='1','selected="selected"') . ">Enable</option>
+</select>]]></optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="funcaptcha_publickey" displayorder="5">
 				<datatype>free</datatype>
 			</setting>
-			<setting varname="funcaptcha_privatekey" displayorder="5">
+			<setting varname="funcaptcha_privatekey" displayorder="6">
 				<datatype>free</datatype>
 			</setting>
-			<setting varname="funcaptcha_proxy" displayorder="6">
+			<setting varname="funcaptcha_proxy" displayorder="7">
 				<datatype></datatype>
 			</setting>
 		</settinggroup>
