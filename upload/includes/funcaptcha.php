@@ -241,7 +241,7 @@ if ( ! class_exists('FUNCAPTCHA')):
 			$data = array(
 				'private_key' 		=> $this->funcaptcha_private_key,
 				'session_token' 	=> $_POST['fc-token'],
-				'fc_rc_challenge' 	=> $_POST['fc_rc_challenge'],
+				'fc_rc_challenge' 	=> ($_POST['fc_rc_challenge'] ? $_POST['fc_rc_challenge'] : null),
 				'args'				=> $args
 			);
 			$result = $this->doPostReturnObject('/fc/v/', $data);
