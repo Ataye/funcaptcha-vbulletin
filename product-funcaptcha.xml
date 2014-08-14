@@ -68,10 +68,30 @@ Recaptcha|recaptcha' where varname='hv_type'
 	</stylevars>
 	<plugins>
 		<plugin active="1" executionorder="5">
+			<title>Show FunCaptcha options</title>
+			<hookname>admin_humanverify_intro_output</hookname>
+			<phpcode><![CDATA[
+			if ($vbulletin->options['hv_type'] !== 'FunCaptcha')
+				return;
+			
+			print_form_header('verify', 'updateoptions');
+            print_table_header('FunCaptcha Options');
+            foreach($cache AS $setting)
+            {
+                if (preg_match('#^funcaptcha_#si', $setting['varname']))
+                {
+                    print_setting_row($setting, $settingphrase);
+                }
+            }
+            print_submit_row($vbphrase['save']);
+            echo '<div class="fc-frame" style="margin-left: auto;margin-right: auto;background: white;width: 89%;margin-top: 20px;border: ridge 4px;text-align: center;"><h3>FunCaptcha Registration</h3><p>You can register for your public and private keys below or at our <a href="http://www.funcaptcha.co/" target="_blank">website</a>.</p><iframe id="reg-fc" src="https://www.funcaptcha.co/wp-fc-register?plugin=vbulletin" scrolling="no" frameBorder="0" height="450px;" width="400px"></iframe></div>';
+		    ]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
 			<title>Add FunCaptcha to human verification manager options</title>
 			<hookname>admin_humanverify_intro_start</hookname>
 			<phpcode><![CDATA[
-			$funcaptcha_vars = array("funcaptcha_theme", "funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox", "funcaptcha_proxy", "funcaptcha_jsfallback");
+			$funcaptcha_vars = array("funcaptcha_theme", "funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox", "funcaptcha_proxy", "funcaptcha_jsfallback", "funcaptcha_newpost");
 			foreach ($funcaptcha_vars AS $funcaptcha_var) {
 				array_push($getsettings, $funcaptcha_var);
 				array_push($varnames, "setting_" . $funcaptcha_var . "_title");
@@ -109,24 +129,43 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 		");]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="5">
-			<title>Show FunCaptcha options</title>
-			<hookname>admin_humanverify_intro_output</hookname>
-			<phpcode><![CDATA[
-			if ($vbulletin->options['hv_type'] !== 'FunCaptcha')
-				return;
-			
-			print_form_header('verify', 'updateoptions');
-            print_table_header('FunCaptcha Options');
-            foreach($cache AS $setting)
-            {
-                if (preg_match('#^funcaptcha_#si', $setting['varname']))
-                {
-                    print_setting_row($setting, $settingphrase);
-                }
-            }
-            print_submit_row($vbphrase['save']);
-            echo '<div class="fc-frame" style="margin-left: auto;margin-right: auto;background: white;width: 89%;margin-top: 20px;border: ridge 4px;text-align: center;"><h3>FunCaptcha Registration</h3><p>You can register for your public and private keys below or at our <a href="http://www.funcaptcha.co/" target="_blank">website</a>.</p><iframe id="reg-fc" src="https://www.funcaptcha.co/wp-fc-register?plugin=vbulletin" scrolling="no" frameBorder="0" height="450px;" width="400px"></iframe></div>';
-		    ]]></phpcode>
+			<title>After post</title>
+			<hookname>newpost_process</hookname>
+			<phpcode><![CDATA[if($vbulletin->userinfo['posts'] < $vbulletin->options['funcaptcha_newpost']) {
+require_once(DIR . '/includes/class_humanverify.php');
+		$verify =& vB_HumanVerify::fetch_library($vbulletin);
+		if (!$verify->verify_token($post['humanverify']))
+		{
+	  		$dataman->error($verify->fetch_error());
+	  	}
+}]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title>New Post</title>
+			<hookname>newreply_form_complete</hookname>
+			<phpcode><![CDATA[if($vbulletin->userinfo['posts'] < $vbulletin->options['funcaptcha_newpost']) {
+require_once(DIR . '/includes/class_humanverify.php');
+$verification =& vB_HumanVerify::fetch_library($vbulletin);
+$human_verify = $verification->output_token();
+}]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title>New Thread</title>
+			<hookname>newthread_form_complete</hookname>
+			<phpcode><![CDATA[if($vbulletin->userinfo['posts'] < $vbulletin->options['funcaptcha_newpost']) {
+require_once(DIR . '/includes/class_humanverify.php');
+$verification =& vB_HumanVerify::fetch_library($vbulletin);
+$human_verify = $verification->output_token();
+}]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title>Disable Quick Reply for new users</title>
+			<hookname>showthread_post_start</hookname>
+			<phpcode><![CDATA[if($vbulletin->userinfo['posts'] < $vbulletin->options['funcaptcha_newpost']) {
+$show['quickreply'] = false;
+	$show['wysiwyg'] = 0;
+	$quickreply = '';
+}]]></phpcode>
 		</plugin>
 	</plugins>
 	<phrases>
@@ -135,35 +174,37 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 			]]></phrase>
 		</phrasetype>
 		<phrasetype name="vBulletin Settings" fieldname="vbsettings">
-			<phrase name="setting_funcaptcha_security_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[If you choose Automatic, security starts at the lowest level, and rises and falls automatically, adjusted by FunCaptcha's monitoring system. The Enhanced level has more challenges to solve, but is very hard for spammer programs to get past:
+			<phrase name="setting_funcaptcha_jsfallback_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[If the user does not have Javascript enabled, display a fallback CAPTCHA? (Most bots have Javascript disabled, we recommend you leave this disabled):
 			]]></phrase>
-			<phrase name="setting_funcaptcha_theme_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Theme
-			]]></phrase>
-			<phrase name="setting_funcaptcha_theme_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[This will change the appearance of FunCaptcha (see <a href="http://www.funcaptcha.co/themes/" target=\"_blank\">here</a> for what they look like):
-			]]></phrase>
-			<phrase name="setting_funcaptcha_security_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Security Level
+			<phrase name="setting_funcaptcha_jsfallback_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Javascript Fallback
 			]]></phrase>
 			<phrase name="setting_funcaptcha_lightbox_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Lightbox mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form. We recommend Lightbox for the best user experience:
 			]]></phrase>
 			<phrase name="setting_funcaptcha_lightbox_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Lightbox Mode
 			]]></phrase>
-			<phrase name="setting_funcaptcha_publickey_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Public Key (Register for this below):
-			]]></phrase>
-			<phrase name="setting_funcaptcha_publickey_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Public Key
-			]]></phrase>
+			<phrase name="setting_funcaptcha_newpost_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Enter the number of posts until you want to show human verification to new user. Enter 0 if you want to disable this option]]></phrase>
+			<phrase name="setting_funcaptcha_newpost_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Number of posts]]></phrase>
 			<phrase name="setting_funcaptcha_privatekey_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Private Key (Register for this below):
 			]]></phrase>
 			<phrase name="setting_funcaptcha_privatekey_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Private Key
 			]]></phrase>
-			<phrase name="settinggroup_funcaptcha" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Settings
-			]]></phrase>
-			<phrase name="setting_funcaptcha_jsfallback_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[If the user does not have Javascript enabled, display a fallback CAPTCHA? (Most bots have Javascript disabled, we recommend you leave this disabled):
-			]]></phrase>
-			<phrase name="setting_funcaptcha_jsfallback_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Javascript Fallback
-			]]></phrase>
 			<phrase name="setting_funcaptcha_proxy_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[This field is optional - Proxy server (including port, eg: 111.11.11.111:8080):
 			]]></phrase>
 			<phrase name="setting_funcaptcha_proxy_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Optional - Proxy Server
+			]]></phrase>
+			<phrase name="setting_funcaptcha_publickey_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Public Key (Register for this below):
+			]]></phrase>
+			<phrase name="setting_funcaptcha_publickey_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Public Key
+			]]></phrase>
+			<phrase name="setting_funcaptcha_security_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[If you choose Automatic, security starts at the lowest level, and rises and falls automatically, adjusted by FunCaptcha's monitoring system. The Enhanced level has more challenges to solve, but is very hard for spammer programs to get past:
+			]]></phrase>
+			<phrase name="setting_funcaptcha_security_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Security Level
+			]]></phrase>
+			<phrase name="setting_funcaptcha_theme_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[This will change the appearance of FunCaptcha (see <a href="http://www.funcaptcha.co/themes/" target=\"_blank\">here</a> for what they look like):
+			]]></phrase>
+			<phrase name="setting_funcaptcha_theme_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Theme
+			]]></phrase>
+			<phrase name="settinggroup_funcaptcha" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Settings
 			]]></phrase>
 		</phrasetype>
 	</phrases>
@@ -196,7 +237,7 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 </select>]]></optioncode>
 				<defaultvalue>1</defaultvalue>
 			</setting>
-						<setting varname="funcaptcha_jsfallback" displayorder="4">
+			<setting varname="funcaptcha_jsfallback" displayorder="4">
 				<datatype>free</datatype>
 				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" id=\"select_setting[funcaptcha_jsfallback]\" class=\"bginput\">
 <option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Disable</option>
@@ -211,7 +252,10 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 				<datatype>free</datatype>
 			</setting>
 			<setting varname="funcaptcha_proxy" displayorder="7">
-				<datatype></datatype>
+			</setting>
+			<setting varname="funcaptcha_newpost" displayorder="8">
+				<datatype>number</datatype>
+				<defaultvalue>5</defaultvalue>
 			</setting>
 		</settinggroup>
 	</options>
@@ -221,4 +265,6 @@ FunCaptcha|FunCaptcha' where varname='hv_type'
 	</cronentries>
 	<faqentries>
 	</faqentries>
+	<navigation>
+	</navigation>
 </product>
