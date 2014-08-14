@@ -66,9 +66,24 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 	 */
 	function output_token($var_prefix = 'humanverify')
 	{
+		$popup_button = null;
+		switch ($var_prefix) {
+			case "editor_thread" :
+				$popup_button = "vB_Editor_001_save";
+			break;
+			case "editor_reply" :
+				$popup_button = "vB_Editor_001_save";
+			break;
+		}
+
 		$funcaptcha =  new FUNCAPTCHA();
 		$funcaptcha->setSecurityLevel(FUNCAPTCHA_SECURITY_LEVEL);
-		$funcaptcha->setLightboxMode(FUNCAPTCHA_LIGHTBOX);
+		if ($popup_button) {
+			$funcaptcha->setLightboxMode(FUNCAPTCHA_LIGHTBOX, $popup_button);
+		} else {
+			$funcaptcha->setLightboxMode(FUNCAPTCHA_LIGHTBOX);
+		}
+		
 		$funcaptcha->setProxy(FUNCAPTCHA_PROXY);
 		$funcaptcha->setTheme(FUNCAPTCHA_THEME);
 		$funcaptcha->setNoJSFallback(FUNCAPTCHA_JSFALLBACK);
@@ -81,8 +96,7 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 			$output = $output . "<label>Verification:</label>";
 			$output = $output . $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY);
 			$output = $output . "</li></div></div>";
-		}
-		
+		}				
 		return $output;
 	}
 }

@@ -3,14 +3,14 @@
 <product productid="funcaptcha" active="1">
 	<title>FunCaptcha</title>
 	<description>FunCaptcha stops spam with a fun, easy game.</description>
-	<version>1.2.1</version>
+	<version>1.3.0.0</version>
 	<url>https://www.funcaptcha.co/vb/</url>
 	<versioncheckurl>http://funcaptcha.co/fc/plugins/vbulletin/versioncheck/</versioncheckurl>
 	<dependencies>
 		<dependency dependencytype="vbulletin" minversion="3.8" maxversion="" />
 	</dependencies>
 	<codes>
-		<code version="1.2.1">
+		<code version="1.3.0.0">
 			<installcode><![CDATA[
 				$db->query("
 					UPDATE " . TABLE_PREFIX . "setting set optioncode = 'radio:piped
@@ -146,7 +146,7 @@ require_once(DIR . '/includes/class_humanverify.php');
 			<phpcode><![CDATA[if($vbulletin->userinfo['posts'] < $vbulletin->options['funcaptcha_newpost']) {
 require_once(DIR . '/includes/class_humanverify.php');
 $verification =& vB_HumanVerify::fetch_library($vbulletin);
-$human_verify = $verification->output_token();
+$human_verify = $verification->output_token('editor_reply');
 }]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="5">
@@ -155,7 +155,7 @@ $human_verify = $verification->output_token();
 			<phpcode><![CDATA[if($vbulletin->userinfo['posts'] < $vbulletin->options['funcaptcha_newpost']) {
 require_once(DIR . '/includes/class_humanverify.php');
 $verification =& vB_HumanVerify::fetch_library($vbulletin);
-$human_verify = $verification->output_token();
+$human_verify = $verification->output_token('editor_thread');
 }]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="5">
@@ -178,11 +178,11 @@ $show['quickreply'] = false;
 			]]></phrase>
 			<phrase name="setting_funcaptcha_jsfallback_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Javascript Fallback
 			]]></phrase>
-			<phrase name="setting_funcaptcha_lightbox_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Lightbox mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form. We recommend Lightbox for the best user experience:
+			<phrase name="setting_funcaptcha_lightbox_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Popup mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form. We recommend Popup for the best user experience:
 			]]></phrase>
-			<phrase name="setting_funcaptcha_lightbox_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Lightbox Mode
+			<phrase name="setting_funcaptcha_lightbox_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Popup Mode
 			]]></phrase>
-			<phrase name="setting_funcaptcha_newpost_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Enter the number of posts until you want to show human verification to new user. Enter 0 if you want to disable this option]]></phrase>
+			<phrase name="setting_funcaptcha_newpost_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Enter the number of posts until you want to disable showing FunCaptcha to new users. Enter 0 if you want to disable.]]></phrase>
 			<phrase name="setting_funcaptcha_newpost_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Number of posts]]></phrase>
 			<phrase name="setting_funcaptcha_privatekey_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Private Key (Register for this below):
 			]]></phrase>
@@ -232,7 +232,7 @@ $show['quickreply'] = false;
 			<setting varname="funcaptcha_lightbox" displayorder="3">
 				<datatype>free</datatype>
 				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" id=\"select_setting[funcaptcha_lightbox]\" class=\"bginput\">
-<option value=\"1\" " . iif($setting['value']=='1','selected="selected"') . ">Lightbox</option>
+<option value=\"1\" " . iif($setting['value']=='1','selected="selected"') . ">Popup</option>
 <option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Inline</option>
 </select>]]></optioncode>
 				<defaultvalue>1</defaultvalue>
