@@ -91,7 +91,7 @@ Recaptcha|recaptcha' where varname='hv_type'
 			<title>Add FunCaptcha to human verification manager options</title>
 			<hookname>admin_humanverify_intro_start</hookname>
 			<phpcode><![CDATA[
-			$funcaptcha_vars = array("funcaptcha_theme", "funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_lightbox", "funcaptcha_proxy", "funcaptcha_jsfallback", "funcaptcha_newpost");
+			$funcaptcha_vars = array("funcaptcha_theme", "funcaptcha_security", "funcaptcha_publickey", "funcaptcha_privatekey", "funcaptcha_label", "funcaptcha_proxy", "funcaptcha_jsfallback", "funcaptcha_newpost");
 			foreach ($funcaptcha_vars AS $funcaptcha_var) {
 				array_push($getsettings, $funcaptcha_var);
 				array_push($varnames, "setting_" . $funcaptcha_var . "_title");
@@ -178,10 +178,6 @@ $show['quickreply'] = false;
 			]]></phrase>
 			<phrase name="setting_funcaptcha_jsfallback_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Javascript Fallback
 			]]></phrase>
-			<phrase name="setting_funcaptcha_lightbox_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Popup mode will show FunCaptcha once the user submits your form, rather than on the page. Inline mode will show FunCaptcha on your page as the user completes your form. We recommend Popup for the best user experience:
-			]]></phrase>
-			<phrase name="setting_funcaptcha_lightbox_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Popup Mode
-			]]></phrase>
 			<phrase name="setting_funcaptcha_newpost_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Enter the number of posts until you want to disable showing FunCaptcha to new users. Enter 0 if you want to disable.]]></phrase>
 			<phrase name="setting_funcaptcha_newpost_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Number of posts]]></phrase>
 			<phrase name="setting_funcaptcha_privatekey_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Private Key (Register for this below):
@@ -204,6 +200,8 @@ $show['quickreply'] = false;
 			]]></phrase>
 			<phrase name="setting_funcaptcha_theme_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Theme
 			]]></phrase>
+			<phrase name="setting_funcaptcha_label_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[The label that appears beside FunCaptcha, make it blank to hide it:]]></phrase>
+			<phrase name="setting_funcaptcha_label_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Label]]></phrase>
 			<phrase name="settinggroup_funcaptcha" date="0" username="FunCaptcha" version="1.0"><![CDATA[FunCaptcha Settings
 			]]></phrase>
 		</phrasetype>
@@ -229,21 +227,17 @@ $show['quickreply'] = false;
 </select>]]></optioncode>
 				<defaultvalue>0</defaultvalue>
 			</setting>
-			<setting varname="funcaptcha_lightbox" displayorder="3">
-				<datatype>free</datatype>
-				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" id=\"select_setting[funcaptcha_lightbox]\" class=\"bginput\">
-<option value=\"1\" " . iif($setting['value']=='1','selected="selected"') . ">Popup</option>
-<option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Inline</option>
-</select>]]></optioncode>
-				<defaultvalue>1</defaultvalue>
-			</setting>
-			<setting varname="funcaptcha_jsfallback" displayorder="4">
+			<setting varname="funcaptcha_jsfallback" displayorder="3">
 				<datatype>free</datatype>
 				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" id=\"select_setting[funcaptcha_jsfallback]\" class=\"bginput\">
 <option value=\"0\" " . iif($setting['value']=='0','selected="selected"') . ">Disable</option>
 <option value=\"1\" " . iif($setting['value']=='1','selected="selected"') . ">Enable</option>
 </select>]]></optioncode>
 				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="funcaptcha_label" displayorder="4">
+				<datatype>free</datatype>
+				<defaultvalue>Verification:</defaultvalue>
 			</setting>
 			<setting varname="funcaptcha_publickey" displayorder="5">
 				<datatype>free</datatype>

@@ -9,9 +9,9 @@ global $vbulletin;
 define('FUNCAPTCHA_PUBLIC_KEY', $vbulletin->options["funcaptcha_publickey"]);
 define('FUNCAPTCHA_PRIVATE_KEY', $vbulletin->options["funcaptcha_privatekey"]);
 define('FUNCAPTCHA_SECURITY_LEVEL', $vbulletin->options["funcaptcha_security"]);
-define('FUNCAPTCHA_LIGHTBOX', $vbulletin->options["funcaptcha_lightbox"]);
 define('FUNCAPTCHA_THEME', $vbulletin->options["funcaptcha_theme"]);
 define('FUNCAPTCHA_PROXY', $vbulletin->options["funcaptcha_proxy"]);
+define('FUNCAPTCHA_LABEL', $vbulletin->options["funcaptcha_label"]);
 define('FUNCAPTCHA_JSFALLBACK', $vbulletin->options["funcaptcha_jsfallback"]);
 define('FUNCAPTCHA_NEWPOSTS', $vbulletin->options["funcaptcha_newpost"]);
 define('FUNCAPTCHA_DEFINE_POSTS', $vbulletin->userinfo['posts']);
@@ -73,7 +73,6 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract {
     function output_token($var_prefix = 'humanverify') {
         $funcaptcha = new FUNCAPTCHA();
         $funcaptcha->setSecurityLevel(FUNCAPTCHA_SECURITY_LEVEL);
-        $funcaptcha->setLightboxMode(FUNCAPTCHA_LIGHTBOX);
         $funcaptcha->setProxy(FUNCAPTCHA_PROXY);
         $funcaptcha->setTheme(FUNCAPTCHA_THEME);
         $funcaptcha->setNoJSFallback(FUNCAPTCHA_JSFALLBACK);
@@ -83,7 +82,9 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract {
             $output = $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY);
         } else {
             $output = "<div class=\"blockrow\"><input type=hidden value='1' id='humanverify' name='humanverify' /><div class=\"group\"><li>";
-            $output = $output . "<label>Verification:</label>";
+            if (FUNCAPTCHA_LABEL && FUNCAPTCHA_LABEL != ""){
+                $output = $output . "<label>".FUNCAPTCHA_LABEL."</label>";
+            }
             $output = $output . $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY);
             $output = $output . "</li></div></div>";
         }
