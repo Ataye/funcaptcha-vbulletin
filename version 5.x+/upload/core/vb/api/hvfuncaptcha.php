@@ -33,7 +33,13 @@ class vB_Api_Hvfuncaptcha extends vB_Api
                             document.getElementsByName('vbform')[0].appendChild(target);
                         }
                     }
+
+                    //detect if ID btnAlertDialogOK is clicked. if it is, we need to chekc if the message is the
+                    //same as our verification error text. if so, trigger reload.
+
                 </script>";
+
+                // var_dump($vboptions);
 
                 //only show HTML/label if not lightbox mode.
                 $output = $output . '<div class="form_row form-row-funcaptcha">';
