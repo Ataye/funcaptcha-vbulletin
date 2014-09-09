@@ -1,9 +1,5 @@
 <?php
 
-if (!isset($GLOBALS['vbulletin']->db)) {
-    exit;
-}
-
 global $vbulletin;
 
 define('FUNCAPTCHA_PUBLIC_KEY', $vbulletin->options["funcaptcha_publickey"]);
@@ -28,7 +24,7 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract {
     /**
      * Constructor
      *
-     * @return	void
+     * @return  void
      */
     function vB_HumanVerify_FunCaptcha(&$registry) {
         parent::vB_HumanVerify_Abstract($registry);
@@ -37,9 +33,9 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract {
     /**
      * Verify is supplied token/reponse is valid
      *
-     * 	@param	array	Values given by user 'input' and 'hash'
+     *  @param  array   Values given by user 'input' and 'hash'
      *
-     * @return	bool
+     * @return  bool
      */
     function verify_token($input) {
         
@@ -65,9 +61,9 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract {
     /**
      * Returns the FunCaptcha HTML
      *
-     * @param	string	Passed to template
+     * @param   string  Passed to template
      *
-     * @return 	string	HTML to output
+     * @return  string  HTML to output
      *
      */
     function output_token($var_prefix = 'humanverify') {
@@ -78,16 +74,14 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract {
         $funcaptcha->setNoJSFallback(FUNCAPTCHA_JSFALLBACK);
 
         //only show HTML/label if not lightbox mode.
-        if (FUNCAPTCHA_LIGHTBOX) {
-            $output = $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY);
-        } else {
-            $output = "<div class=\"blockrow\"><input type=hidden value='1' id='humanverify' name='humanverify' /><div class=\"group\"><li>";
-            if (FUNCAPTCHA_LABEL && FUNCAPTCHA_LABEL != ""){
-                $output = $output . "<label>".FUNCAPTCHA_LABEL."</label>";
-            }
-            $output = $output . $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY);
-            $output = $output . "</li></div></div>";
+        $output = $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY);
+        $output = $output . '<div class="form_row form-row-funcaptcha">';
+        if (FUNCAPTCHA_LABEL && FUNCAPTCHA_LABEL != ""){
+            $output = $output . "<label class='label_column'>".FUNCAPTCHA_LABEL."</label>";
         }
+        $output = $output . '<div class="field_column contactusFields_message_container">';
+        $output = $output . $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY);
+        $output = $output . "</div></div>";
 
         return $output;
     }
