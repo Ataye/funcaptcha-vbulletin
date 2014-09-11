@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<navgroups product="funcaptcha" master="true">
-	<navgroup phrase="settings_gcphome" permissions="canadminsettings:canadminsettingsall" hr="true" displayorder="10">
-		<navoption displayorder="90" permissions="canadminsettings:canadminsettingsall">
-			<phrase>funcaptcha_settings_page</phrase>
-			<link>funcaptcha_settings.php</link>
-		</navoption>
-	</navgroup>
-</navgroups>
