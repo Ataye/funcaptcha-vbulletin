@@ -67,7 +67,7 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 	 */
 	function output_token($var_prefix = 'humanverify')
 	{
-		if (FUNCAPTCHA_PUBLIC_KEY && FUNCAPTCHA_PRIVATE_KEY) {
+		if (!FUNCAPTCHA_PUBLIC_KEY || !FUNCAPTCHA_PRIVATE_KEY) {
 			$output = "<p>CAPTCHA not setup correctly, please contact this sites administrator.</p>";
 		} else {
 			$funcaptcha =  new FUNCAPTCHA();
@@ -93,7 +93,7 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 			if ($is_topic || $is_reply) {
 	        	$script =   "<script type='text/javascript'>
 	                    var moved = false;
-	                    // This ensures the code is executed in the right order
+	                    var load_counter = 0;
 	                    if (!moved) {
 	                        rearrange_form_elements();
 	                    } else {
@@ -101,17 +101,22 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 	                    }
 	                    function rearrange_form_elements() {
 	                        var target = document.getElementById('funcaptcha-wrapper');
-	                        if (target != null && document.getElementsByName('vbform')[0] != null) {
-	                            target.parentNode.removeChild(target);
-	                            document.getElementsByName('vbform')[0].appendChild(target);
+	                        if (target != null && document.getElementsByName('wysiwyg')[0] != null) {
+	                            document.getElementsByName('wysiwyg')[0].parentNode.insertBefore(document.getElementById('funcaptcha-wrapper'), document.getElementsByName('wysiwyg')[0].nextSibling);
+	                            moved = true;
+	                        } else {
+	                        	load_counter++;
+	                        	if (load_counter < 20) {
+		                        	setTimeout('rearrange_form_elements()', 1);
+		                        }
 	                        }
 	                    }
 	                </script>";
 	        }
 			
 			//only show HTML/label if not lightbox mode.
-			$output = "<div class=\"blockrow\"><input type=hidden value='1' id='humanverify' name='humanverify' /><div class=\"group\"><li>";
-			$output = $output . "<div id='funcaptcha-wrapper'>";
+			$output = "<div class=\"blockrow\"><input type=hidden value='1' id='humanverify' name='humanverify' /><div class=\"group\">";
+			$output = $output . "<div id='funcaptcha-wrapper'><li>";
 			if (FUNCAPTCHA_LABEL && FUNCAPTCHA_LABEL != ""){
 	            $output = $output . "<label>".FUNCAPTCHA_LABEL."</label>";
 	        }
