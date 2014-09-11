@@ -178,7 +178,7 @@ $show['quickreply'] = false;
 			]]></phrase>
 			<phrase name="setting_funcaptcha_jsfallback_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Javascript Fallback
 			]]></phrase>
-			<phrase name="setting_funcaptcha_newpost_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Enter the number of posts until you want to disable showing FunCaptcha to new users. Enter 0 if you want to disable.]]></phrase>
+			<phrase name="setting_funcaptcha_newpost_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[To stop spammers, new users must solve FunCaptcha while making their first few posts. Enter how many times this happens. Enter 0 to disable this protection.]]></phrase>
 			<phrase name="setting_funcaptcha_newpost_title" date="0" username="FunCaptcha" version="1.0"><![CDATA[Number of posts]]></phrase>
 			<phrase name="setting_funcaptcha_privatekey_desc" date="0" username="FunCaptcha" version="1.0"><![CDATA[Private Key (Register for this below):
 			]]></phrase>
