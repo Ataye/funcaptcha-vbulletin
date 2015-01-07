@@ -17,6 +17,7 @@ define( 'FUNCAPTCHA_JSFALLBACK', $vbulletin->options["funcaptcha_jsfallback"]);
 define( 'FUNCAPTCHA_NEWPOST', $vbulletin->options["funcaptcha_newpost"]);
 
 require_once(DIR . '/includes/funcaptcha.php');
+require_once(DIR . '/includes/adminfunctions.php');
 
 /**
 * FunCaptcha class for vbulletin (funcaptcha.com)
@@ -67,9 +68,12 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 	 */
 	function output_token($var_prefix = 'humanverify')
 	{
+		global $vbulletin;
+		
 		if (!FUNCAPTCHA_PUBLIC_KEY || !FUNCAPTCHA_PRIVATE_KEY) {
 			$output = "<p>CAPTCHA not setup correctly, please contact this sites administrator.</p>";
 		} else {
+
 			$funcaptcha =  new FUNCAPTCHA();
 			$funcaptcha->setSecurityLevel(FUNCAPTCHA_SECURITY_LEVEL);		
 			$funcaptcha->setProxy(FUNCAPTCHA_PROXY);
@@ -123,9 +127,48 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 			$output = $output . $funcaptcha->getFunCaptcha(FUNCAPTCHA_PUBLIC_KEY, array("logs" => array("newpost" => FUNCAPTCHA_NEWPOST)));
 			$output = $output . "</li></div></div></div>";
 			$output = $output . $script;
+			
+			// update local settings:
+			$this->updateLocal($funcaptcha->remote_options);
 		}
 		
 		return $output;
 	}
+	
+	function updateLocal($remote_options)
+	{
+		global $vbulletin;
+		
+		if (!isset($remote_options))
+			return;
+			
+		$arOptMap = array(
+			'proxy' => 'funcaptcha_proxy',
+			'security_level' => 'funcaptcha_security',
+			'theme' => 'funcaptcha_theme',
+			'noscript_support' => 'funcaptcha_jsfallback',
+		);
+		$tblPrefix = $vbulletin->config['Database']['tableprefix'];
+		$hasChanges = false;
+		
+		foreach(array_keys($remote_options) as $key)
+		{
+			try{
+				if (isset($arOptMap[$key]))
+				{
+					// compare with local option, if different update:
+					if ($remote_options[$key] != $vbulletin->options[$arOptMap[$key]])
+					{
+						$hasChanges = true;
+						$vbulletin->db->query("UPDATE " . $tblPrefix . "setting set value='".$remote_options[$key]."' where varname='" . $arOptMap[$key] . "'");
+					}
+				}
+			} catch (\Exception $e) {}
+		}
+		
+		if ($hasChanges)
+			build_options();
+	}
+	
 }
 ?>
