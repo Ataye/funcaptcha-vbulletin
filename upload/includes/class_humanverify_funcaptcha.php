@@ -120,7 +120,7 @@ class vB_HumanVerify_FunCaptcha extends vB_HumanVerify_Abstract
 			
 			//only show HTML/label if not lightbox mode.
 			$output = "<div class=\"blockrow\"><input type=hidden value='1' id='humanverify' name='humanverify' /><div class=\"group\">";
-			$output = $output . "<div id='funcaptcha-wrapper'><li>";
+			$output = $output . "<div id='funcaptcha-wrapper'><li style='list-style-type:none;'>";
 			if (FUNCAPTCHA_LABEL && FUNCAPTCHA_LABEL != ""){
 	            $output = $output . "<label>".FUNCAPTCHA_LABEL."</label>";
 	        }
