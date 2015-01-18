@@ -18,7 +18,7 @@
  * THE SOFTWARE.
  *
  */
-define("FUNCAPTCHA_SERVER", "funcaptcha.com");
+define("FUNCAPTCHA_SERVER", "funcaptcha.co");
 // Define class if it does not already exist
 if ( ! class_exists('FUNCAPTCHA')) {
 	class FUNCAPTCHA {
